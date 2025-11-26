@@ -5,7 +5,7 @@ import threading
 
 # --- Interface Tkinter ---
 root = Tk()
-root.title("Keylogger pédagogique")
+root.title("Keylogger")
 root.geometry("500x300")
 
 label = Label(root, text="Aucune touche détectée", font=("Arial", 16))
